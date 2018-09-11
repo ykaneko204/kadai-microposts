@@ -4,7 +4,19 @@ class MicropostsController < ApplicationController
 
   def create
     @micropost = current_user.microposts.build(micropost_params)
-    if @micropost.save
+    logger.debug("############CREATE1 current_user:   ")
+    p current_user
+    logger.debug("     ")
+
+    logger.debug("############CREATE2 current_user.microposts:   ")
+    logger.debug(current_user.microposts.inspect)
+    logger.debug("     ")
+
+    logger.debug("############CREATE3 @microposts:   ")
+    logger.debug(@micropost.inspect)
+    logger.debug("     ")
+    
+    if @micropost.save!
       flash[:success] = 'メッセージを投稿しました。'
       redirect_to root_url
     else

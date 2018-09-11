@@ -30,5 +30,42 @@ class User < ApplicationRecord
   def feed_microposts
     Micropost.where(user_id: self.following_ids + [self.id])
   end
+
+  has_many :likes, dependent: :destroy
+  has_many :recomendos, through: :likes, source: :micropost
+
   
+  def likeon(micropost)
+    self.likes.find_or_create_by(micropost_id: micropost.id)
+  end
+
+  def likeoff(micropost)
+    like = self.likes.find_by(micropost_id: micropost.id)
+    like.destroy if like
+  end
+  
+  def likeon?(micropost)
+=begin
+    logger.debug("############1 user:   ")
+    logger.debug(self.inspect)
+    logger.debug("     ")
+        
+    logger.debug("############2 micropost:   ")
+    logger.debug(micropost.inspect)
+    logger.debug("     ")
+
+    logger.debug("############3 Likes:   ")
+    logger.debug(self.likes.find_by(micropost_id: micropost.id).inspect)
+    logger.debug("     ")
+
+    logger.debug("############4 Recomendos:   ")
+    logger.debug(self.recomendos.inspect)
+    logger.debug("     ")
+    
+    logger.debug("############5 recomendos?:   ")
+    p self.recomendos.include?(micropost)
+    logger.debug("     ")
+=end
+    self.recomendos.include?(micropost)
+  end
 end
